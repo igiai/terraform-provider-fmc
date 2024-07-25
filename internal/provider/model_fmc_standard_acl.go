@@ -206,18 +206,25 @@ func (data *StandardACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 		}
 	}
 	for i := range data.Entries {
-		r := res.Get(fmt.Sprintf("entries.%d", i))
-		if value := r.Get("action"); value.Exists() && !data.Entries[i].Action.IsNull() {
-			data.Entries[i].Action = types.StringValue(value.String())
+		parent := data
+		data := parent.Entries[i]
+		parentRes := res
+		res := parentRes.Get(fmt.Sprintf("entries.%d", i))
+		if value := res.Get("action"); value.Exists() && !data.Action.IsNull() {
+			data.Action = types.StringValue(value.String())
 		} else {
-			data.Entries[i].Action = types.StringNull()
+			data.Action = types.StringNull()
 		}
-		for ci := 0; ci < len(data.Entries[i].Objects); ci++ {
+		for i := 0; i < len(data.Objects); i++ {
 			keys := [...]string{"id"}
-			keyValues := [...]string{data.Entries[i].Objects[ci].Id.ValueString()}
+			keyValues := [...]string{data.Objects[i].Id.ValueString()}
 
-			var cr gjson.Result
-			r.Get("networks.objects").ForEach(
+			parent := data
+			data := parent.Objects[i]
+			parentRes := res
+			var res gjson.Result
+
+			parentRes.Get("networks.objects").ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -228,39 +235,44 @@ func (data *StandardACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 						found = true
 					}
 					if found {
-						cr = v
+						res = v
 						return false
 					}
 					return true
 				},
 			)
-			if !cr.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing data.Entries[i].Objects[%d] = %+v",
-					ci,
-					data.Entries[i].Objects[ci],
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing Objects[%d] = %+v",
+					i,
+					parent.Objects[i],
 				))
-				data.Entries[i].Objects = slices.Delete(data.Entries[i].Objects, ci, ci+1)
-				ci--
+				parent.Objects = slices.Delete(parent.Objects, i, i+1)
+				i--
 
 				continue
 			}
-			if value := cr.Get("id"); value.Exists() && !data.Entries[i].Objects[ci].Id.IsNull() {
-				data.Entries[i].Objects[ci].Id = types.StringValue(value.String())
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
 			} else {
-				data.Entries[i].Objects[ci].Id = types.StringNull()
+				data.Id = types.StringNull()
 			}
-			if value := cr.Get("type"); value.Exists() && !data.Entries[i].Objects[ci].Type.IsNull() {
-				data.Entries[i].Objects[ci].Type = types.StringValue(value.String())
+			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+				data.Type = types.StringValue(value.String())
 			} else {
-				data.Entries[i].Objects[ci].Type = types.StringNull()
+				data.Type = types.StringNull()
 			}
+			parent.Objects[i] = data
 		}
-		for ci := 0; ci < len(data.Entries[i].Literals); ci++ {
+		for i := 0; i < len(data.Literals); i++ {
 			keys := [...]string{"value"}
-			keyValues := [...]string{data.Entries[i].Literals[ci].Value.ValueString()}
+			keyValues := [...]string{data.Literals[i].Value.ValueString()}
 
-			var cr gjson.Result
-			r.Get("networks.literals").ForEach(
+			parent := data
+			data := parent.Literals[i]
+			parentRes := res
+			var res gjson.Result
+
+			parentRes.Get("networks.literals").ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -271,28 +283,30 @@ func (data *StandardACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 						found = true
 					}
 					if found {
-						cr = v
+						res = v
 						return false
 					}
 					return true
 				},
 			)
-			if !cr.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing data.Entries[i].Literals[%d] = %+v",
-					ci,
-					data.Entries[i].Literals[ci],
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing Literals[%d] = %+v",
+					i,
+					parent.Literals[i],
 				))
-				data.Entries[i].Literals = slices.Delete(data.Entries[i].Literals, ci, ci+1)
-				ci--
+				parent.Literals = slices.Delete(parent.Literals, i, i+1)
+				i--
 
 				continue
 			}
-			if value := cr.Get("value"); value.Exists() && !data.Entries[i].Literals[ci].Value.IsNull() {
-				data.Entries[i].Literals[ci].Value = types.StringValue(value.String())
+			if value := res.Get("value"); value.Exists() && !data.Value.IsNull() {
+				data.Value = types.StringValue(value.String())
 			} else {
-				data.Entries[i].Literals[ci].Value = types.StringNull()
+				data.Value = types.StringNull()
 			}
+			parent.Literals[i] = data
 		}
+		parent.Entries[i] = data
 	}
 }
 
