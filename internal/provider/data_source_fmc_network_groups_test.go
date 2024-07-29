@@ -74,8 +74,6 @@ func testAccDataSourceFmcNetworkGroupsConfig() string {
 	config += `
 		data "fmc_network_groups" "test" {
 			id = fmc_network_groups.test.id
-			
-			
 			items = {
 				"net_group_1" = {
 					id = fmc_network_groups.test.items["net_group_1"].id

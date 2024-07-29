@@ -133,7 +133,7 @@ func (data *StandardACL) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("entries"); value.Exists() {
 		data.Entries = make([]StandardACLEntries, 0)
 		value.ForEach(func(k, res gjson.Result) bool {
-			parent := data
+			parent := &data
 			data := StandardACLEntries{}
 			if value := res.Get("action"); value.Exists() {
 				data.Action = types.StringValue(value.String())
@@ -143,7 +143,7 @@ func (data *StandardACL) fromBody(ctx context.Context, res gjson.Result) {
 			if value := res.Get("networks.objects"); value.Exists() {
 				data.Objects = make([]StandardACLEntriesObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := StandardACLEntriesObjects{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
@@ -155,25 +155,25 @@ func (data *StandardACL) fromBody(ctx context.Context, res gjson.Result) {
 					} else {
 						data.Type = types.StringNull()
 					}
-					parent.Objects = append(parent.Objects, data)
+					(*parent).Objects = append((*parent).Objects, data)
 					return true
 				})
 			}
 			if value := res.Get("networks.literals"); value.Exists() {
 				data.Literals = make([]StandardACLEntriesLiterals, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := StandardACLEntriesLiterals{}
 					if value := res.Get("value"); value.Exists() {
 						data.Value = types.StringValue(value.String())
 					} else {
 						data.Value = types.StringNull()
 					}
-					parent.Literals = append(parent.Literals, data)
+					(*parent).Literals = append((*parent).Literals, data)
 					return true
 				})
 			}
-			parent.Entries = append(parent.Entries, data)
+			(*parent).Entries = append((*parent).Entries, data)
 			return true
 		})
 	}

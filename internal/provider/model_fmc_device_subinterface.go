@@ -276,7 +276,7 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 	if value := res.Get("ipv6.addresses"); value.Exists() {
 		data.Ipv6Addresses = make([]DeviceSubinterfaceIpv6Addresses, 0)
 		value.ForEach(func(k, res gjson.Result) bool {
-			parent := data
+			parent := &data
 			data := DeviceSubinterfaceIpv6Addresses{}
 			if value := res.Get("address"); value.Exists() {
 				data.Address = types.StringValue(value.String())
@@ -293,7 +293,7 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 			} else {
 				data.EnforceEui = types.BoolNull()
 			}
-			parent.Ipv6Addresses = append(parent.Ipv6Addresses, data)
+			(*parent).Ipv6Addresses = append((*parent).Ipv6Addresses, data)
 			return true
 		})
 	}

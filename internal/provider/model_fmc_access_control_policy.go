@@ -536,7 +536,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 	if value := res.Get("dummy_categories"); value.Exists() {
 		data.Categories = make([]AccessControlPolicyCategories, 0)
 		value.ForEach(func(k, res gjson.Result) bool {
-			parent := data
+			parent := &data
 			data := AccessControlPolicyCategories{}
 			if value := res.Get("id"); value.Exists() {
 				data.Id = types.StringValue(value.String())
@@ -548,14 +548,14 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 			} else {
 				data.Name = types.StringNull()
 			}
-			parent.Categories = append(parent.Categories, data)
+			(*parent).Categories = append((*parent).Categories, data)
 			return true
 		})
 	}
 	if value := res.Get("dummy_rules"); value.Exists() {
 		data.Rules = make([]AccessControlPolicyRules, 0)
 		value.ForEach(func(k, res gjson.Result) bool {
-			parent := data
+			parent := &data
 			data := AccessControlPolicyRules{}
 			if value := res.Get("id"); value.Exists() {
 				data.Id = types.StringValue(value.String())
@@ -590,35 +590,35 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 			if value := res.Get("sourceNetworks.literals"); value.Exists() {
 				data.SourceNetworkLiterals = make([]AccessControlPolicyRulesSourceNetworkLiterals, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := AccessControlPolicyRulesSourceNetworkLiterals{}
 					if value := res.Get("value"); value.Exists() {
 						data.Value = types.StringValue(value.String())
 					} else {
 						data.Value = types.StringNull()
 					}
-					parent.SourceNetworkLiterals = append(parent.SourceNetworkLiterals, data)
+					(*parent).SourceNetworkLiterals = append((*parent).SourceNetworkLiterals, data)
 					return true
 				})
 			}
 			if value := res.Get("destinationNetworks.literals"); value.Exists() {
 				data.DestinationNetworkLiterals = make([]AccessControlPolicyRulesDestinationNetworkLiterals, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := AccessControlPolicyRulesDestinationNetworkLiterals{}
 					if value := res.Get("value"); value.Exists() {
 						data.Value = types.StringValue(value.String())
 					} else {
 						data.Value = types.StringNull()
 					}
-					parent.DestinationNetworkLiterals = append(parent.DestinationNetworkLiterals, data)
+					(*parent).DestinationNetworkLiterals = append((*parent).DestinationNetworkLiterals, data)
 					return true
 				})
 			}
 			if value := res.Get("sourceNetworks.objects"); value.Exists() {
 				data.SourceNetworkObjects = make([]AccessControlPolicyRulesSourceNetworkObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := AccessControlPolicyRulesSourceNetworkObjects{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
@@ -630,14 +630,14 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 					} else {
 						data.Type = types.StringNull()
 					}
-					parent.SourceNetworkObjects = append(parent.SourceNetworkObjects, data)
+					(*parent).SourceNetworkObjects = append((*parent).SourceNetworkObjects, data)
 					return true
 				})
 			}
 			if value := res.Get("destinationNetworks.objects"); value.Exists() {
 				data.DestinationNetworkObjects = make([]AccessControlPolicyRulesDestinationNetworkObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := AccessControlPolicyRulesDestinationNetworkObjects{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
@@ -649,70 +649,70 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 					} else {
 						data.Type = types.StringNull()
 					}
-					parent.DestinationNetworkObjects = append(parent.DestinationNetworkObjects, data)
+					(*parent).DestinationNetworkObjects = append((*parent).DestinationNetworkObjects, data)
 					return true
 				})
 			}
 			if value := res.Get("sourceDynamicObjects.objects"); value.Exists() {
 				data.SourceDynamicObjects = make([]AccessControlPolicyRulesSourceDynamicObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := AccessControlPolicyRulesSourceDynamicObjects{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
 					} else {
 						data.Id = types.StringNull()
 					}
-					parent.SourceDynamicObjects = append(parent.SourceDynamicObjects, data)
+					(*parent).SourceDynamicObjects = append((*parent).SourceDynamicObjects, data)
 					return true
 				})
 			}
 			if value := res.Get("destinationDynamicObjects.objects"); value.Exists() {
 				data.DestinationDynamicObjects = make([]AccessControlPolicyRulesDestinationDynamicObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := AccessControlPolicyRulesDestinationDynamicObjects{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
 					} else {
 						data.Id = types.StringNull()
 					}
-					parent.DestinationDynamicObjects = append(parent.DestinationDynamicObjects, data)
+					(*parent).DestinationDynamicObjects = append((*parent).DestinationDynamicObjects, data)
 					return true
 				})
 			}
 			if value := res.Get("sourcePorts.objects"); value.Exists() {
 				data.SourcePortObjects = make([]AccessControlPolicyRulesSourcePortObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := AccessControlPolicyRulesSourcePortObjects{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
 					} else {
 						data.Id = types.StringNull()
 					}
-					parent.SourcePortObjects = append(parent.SourcePortObjects, data)
+					(*parent).SourcePortObjects = append((*parent).SourcePortObjects, data)
 					return true
 				})
 			}
 			if value := res.Get("destinationPorts.objects"); value.Exists() {
 				data.DestinationPortObjects = make([]AccessControlPolicyRulesDestinationPortObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := AccessControlPolicyRulesDestinationPortObjects{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
 					} else {
 						data.Id = types.StringNull()
 					}
-					parent.DestinationPortObjects = append(parent.DestinationPortObjects, data)
+					(*parent).DestinationPortObjects = append((*parent).DestinationPortObjects, data)
 					return true
 				})
 			}
 			if value := res.Get("sourceSecurityGroupTags.objects"); value.Exists() {
 				data.SourceSecurityGroupTagObjects = make([]AccessControlPolicyRulesSourceSecurityGroupTagObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := AccessControlPolicyRulesSourceSecurityGroupTagObjects{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
@@ -724,14 +724,14 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 					} else {
 						data.Type = types.StringNull()
 					}
-					parent.SourceSecurityGroupTagObjects = append(parent.SourceSecurityGroupTagObjects, data)
+					(*parent).SourceSecurityGroupTagObjects = append((*parent).SourceSecurityGroupTagObjects, data)
 					return true
 				})
 			}
 			if value := res.Get("destinationSecurityGroupTags.objects"); value.Exists() {
 				data.DestinationSecurityGroupTagObjects = make([]AccessControlPolicyRulesDestinationSecurityGroupTagObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := AccessControlPolicyRulesDestinationSecurityGroupTagObjects{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
@@ -743,56 +743,56 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 					} else {
 						data.Type = types.StringNull()
 					}
-					parent.DestinationSecurityGroupTagObjects = append(parent.DestinationSecurityGroupTagObjects, data)
+					(*parent).DestinationSecurityGroupTagObjects = append((*parent).DestinationSecurityGroupTagObjects, data)
 					return true
 				})
 			}
 			if value := res.Get("sourceZones.objects"); value.Exists() {
 				data.SourceZones = make([]AccessControlPolicyRulesSourceZones, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := AccessControlPolicyRulesSourceZones{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
 					} else {
 						data.Id = types.StringNull()
 					}
-					parent.SourceZones = append(parent.SourceZones, data)
+					(*parent).SourceZones = append((*parent).SourceZones, data)
 					return true
 				})
 			}
 			if value := res.Get("destinationZones.objects"); value.Exists() {
 				data.DestinationZones = make([]AccessControlPolicyRulesDestinationZones, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := AccessControlPolicyRulesDestinationZones{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
 					} else {
 						data.Id = types.StringNull()
 					}
-					parent.DestinationZones = append(parent.DestinationZones, data)
+					(*parent).DestinationZones = append((*parent).DestinationZones, data)
 					return true
 				})
 			}
 			if value := res.Get("urls.objects"); value.Exists() {
 				data.UrlObjects = make([]AccessControlPolicyRulesUrlObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := AccessControlPolicyRulesUrlObjects{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
 					} else {
 						data.Id = types.StringNull()
 					}
-					parent.UrlObjects = append(parent.UrlObjects, data)
+					(*parent).UrlObjects = append((*parent).UrlObjects, data)
 					return true
 				})
 			}
 			if value := res.Get("urls.urlCategoriesWithReputation"); value.Exists() {
 				data.UrlCategories = make([]AccessControlPolicyRulesUrlCategories, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
-					parent := data
+					parent := &data
 					data := AccessControlPolicyRulesUrlCategories{}
 					if value := res.Get("category.id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
@@ -804,7 +804,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 					} else {
 						data.Reputation = types.StringNull()
 					}
-					parent.UrlCategories = append(parent.UrlCategories, data)
+					(*parent).UrlCategories = append((*parent).UrlCategories, data)
 					return true
 				})
 			}
@@ -858,7 +858,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 			} else {
 				data.IntrusionPolicyId = types.StringNull()
 			}
-			parent.Rules = append(parent.Rules, data)
+			(*parent).Rules = append((*parent).Rules, data)
 			return true
 		})
 	}

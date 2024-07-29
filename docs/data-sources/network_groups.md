@@ -15,6 +15,11 @@ This plural data source can query a bulk of Network Groups.
 ```terraform
 data "fmc_network_groups" "example" {
   id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  items = {
+    "net_group_1" = {
+      id = fmc_network_groups.test.items["net_group_1"].id
+    }
+  }
 }
 ```
 
@@ -28,19 +33,19 @@ data "fmc_network_groups" "example" {
 ### Optional
 
 - `domain` (String) The name of the FMC domain
-
-### Read-Only
-
 - `items` (Attributes Map) Map of network groups. The key of the map is the name of the individual Network Group. (see [below for nested schema](#nestedatt--items))
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`
 
+Required:
+
+- `id` (String) UUID of the managed Network Group.
+
 Read-Only:
 
 - `description` (String) Optional user-created description.
 - `group_names` (Set of String) Set of names (not UUIDs) of child Network Groups. The names must be defined in the same instance of fmc_network_groups resource. This is an auxiliary way to add a child Network Group: the suggested way is to add it inside `objects` by its UUID. Attribute `group_names` is used in managed resource only and always empty in a data-source. Modification of contents of `group_names` is not yet implemented.
-- `id` (String) UUID of the managed Network Group.
 - `literals` (Attributes Set) Set of literal values. (see [below for nested schema](#nestedatt--items--literals))
 - `objects` (Attributes Set) Set of objects (fmc_network, fmc_host, ...). (see [below for nested schema](#nestedatt--items--objects))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
