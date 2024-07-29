@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"maps"
 	"slices"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -306,3 +307,10 @@ func (data *NetworkGroups) fromBodyUnknowns(ctx context.Context, res gjson.Resul
 }
 
 // End of section. //template:end fromBodyUnknowns
+
+func (data *NetworkGroups) Clone() NetworkGroups {
+	ret := *data
+	ret.Items = maps.Clone(data.Items)
+
+	return ret
+}
