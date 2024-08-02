@@ -111,14 +111,15 @@ func (data *DeviceIPv4StaticRoute) fromBody(ctx context.Context, res gjson.Resul
 	}
 	if value := res.Get("selectedNetworks"); value.Exists() {
 		data.DestinationNetworks = make([]DeviceIPv4StaticRouteDestinationNetworks, 0)
-		value.ForEach(func(k, v gjson.Result) bool {
-			item := DeviceIPv4StaticRouteDestinationNetworks{}
-			if cValue := v.Get("id"); cValue.Exists() {
-				item.Id = types.StringValue(cValue.String())
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := data
+			data := DeviceIPv4StaticRouteDestinationNetworks{}
+			if value := res.Get("id"); value.Exists() {
+				data.Id = types.StringValue(value.String())
 			} else {
-				item.Id = types.StringNull()
+				data.Id = types.StringNull()
 			}
-			data.DestinationNetworks = append(data.DestinationNetworks, item)
+			parent.DestinationNetworks = append(parent.DestinationNetworks, data)
 			return true
 		})
 	}

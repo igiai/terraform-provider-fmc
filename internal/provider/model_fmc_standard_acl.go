@@ -132,45 +132,48 @@ func (data *StandardACL) fromBody(ctx context.Context, res gjson.Result) {
 	}
 	if value := res.Get("entries"); value.Exists() {
 		data.Entries = make([]StandardACLEntries, 0)
-		value.ForEach(func(k, v gjson.Result) bool {
-			item := StandardACLEntries{}
-			if cValue := v.Get("action"); cValue.Exists() {
-				item.Action = types.StringValue(cValue.String())
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := data
+			data := StandardACLEntries{}
+			if value := res.Get("action"); value.Exists() {
+				data.Action = types.StringValue(value.String())
 			} else {
-				item.Action = types.StringNull()
+				data.Action = types.StringNull()
 			}
-			if cValue := v.Get("networks.objects"); cValue.Exists() {
-				item.Objects = make([]StandardACLEntriesObjects, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := StandardACLEntriesObjects{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("networks.objects"); value.Exists() {
+				data.Objects = make([]StandardACLEntriesObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := StandardACLEntriesObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					if ccValue := cv.Get("type"); ccValue.Exists() {
-						cItem.Type = types.StringValue(ccValue.String())
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
 					} else {
-						cItem.Type = types.StringNull()
+						data.Type = types.StringNull()
 					}
-					item.Objects = append(item.Objects, cItem)
+					parent.Objects = append(parent.Objects, data)
 					return true
 				})
 			}
-			if cValue := v.Get("networks.literals"); cValue.Exists() {
-				item.Literals = make([]StandardACLEntriesLiterals, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := StandardACLEntriesLiterals{}
-					if ccValue := cv.Get("value"); ccValue.Exists() {
-						cItem.Value = types.StringValue(ccValue.String())
+			if value := res.Get("networks.literals"); value.Exists() {
+				data.Literals = make([]StandardACLEntriesLiterals, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := StandardACLEntriesLiterals{}
+					if value := res.Get("value"); value.Exists() {
+						data.Value = types.StringValue(value.String())
 					} else {
-						cItem.Value = types.StringNull()
+						data.Value = types.StringNull()
 					}
-					item.Literals = append(item.Literals, cItem)
+					parent.Literals = append(parent.Literals, data)
 					return true
 				})
 			}
-			data.Entries = append(data.Entries, item)
+			parent.Entries = append(parent.Entries, data)
 			return true
 		})
 	}

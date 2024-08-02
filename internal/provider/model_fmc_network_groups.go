@@ -125,6 +125,63 @@ func (data NetworkGroups) toBody(ctx context.Context, state NetworkGroups) strin
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
 func (data *NetworkGroups) fromBody(ctx context.Context, res gjson.Result) {
+	if value := res.Get("items"); value.Exists() {
+		data.Items = map[string]NetworkGroupsItems{}
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := data
+			data := NetworkGroupsItems{}
+			if value := res.Get("id"); value.Exists() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			if value := res.Get("description"); value.Exists() {
+				data.Description = types.StringValue(value.String())
+			} else {
+				data.Description = types.StringNull()
+			}
+			if value := res.Get("overridable"); value.Exists() {
+				data.Overridable = types.BoolValue(value.Bool())
+			} else {
+				data.Overridable = types.BoolNull()
+			}
+			if value := res.Get("group_names"); value.Exists() {
+				data.GroupNames = helpers.GetStringSet(value.Array())
+			} else {
+				data.GroupNames = types.SetNull(types.StringType)
+			}
+			if value := res.Get("objects"); value.Exists() {
+				data.Objects = make([]NetworkGroupsItemsObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := NetworkGroupsItemsObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
+					} else {
+						data.Id = types.StringNull()
+					}
+					parent.Objects = append(parent.Objects, data)
+					return true
+				})
+			}
+			if value := res.Get("literals"); value.Exists() {
+				data.Literals = make([]NetworkGroupsItemsLiterals, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := NetworkGroupsItemsLiterals{}
+					if value := res.Get("value"); value.Exists() {
+						data.Value = types.StringValue(value.String())
+					} else {
+						data.Value = types.StringNull()
+					}
+					parent.Literals = append(parent.Literals, data)
+					return true
+				})
+			}
+			parent.Items[res.Get("name").String()] = data
+			return true
+		})
+	}
 }
 
 // End of section. //template:end fromBody

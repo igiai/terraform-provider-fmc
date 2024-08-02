@@ -275,24 +275,25 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
 		data.Ipv6Addresses = make([]DeviceSubinterfaceIpv6Addresses, 0)
-		value.ForEach(func(k, v gjson.Result) bool {
-			item := DeviceSubinterfaceIpv6Addresses{}
-			if cValue := v.Get("address"); cValue.Exists() {
-				item.Address = types.StringValue(cValue.String())
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := data
+			data := DeviceSubinterfaceIpv6Addresses{}
+			if value := res.Get("address"); value.Exists() {
+				data.Address = types.StringValue(value.String())
 			} else {
-				item.Address = types.StringNull()
+				data.Address = types.StringNull()
 			}
-			if cValue := v.Get("prefix"); cValue.Exists() {
-				item.Prefix = types.StringValue(cValue.String())
+			if value := res.Get("prefix"); value.Exists() {
+				data.Prefix = types.StringValue(value.String())
 			} else {
-				item.Prefix = types.StringNull()
+				data.Prefix = types.StringNull()
 			}
-			if cValue := v.Get("enforceEUI64"); cValue.Exists() {
-				item.EnforceEui = types.BoolValue(cValue.Bool())
+			if value := res.Get("enforceEUI64"); value.Exists() {
+				data.EnforceEui = types.BoolValue(value.Bool())
 			} else {
-				item.EnforceEui = types.BoolNull()
+				data.EnforceEui = types.BoolNull()
 			}
-			data.Ipv6Addresses = append(data.Ipv6Addresses, item)
+			parent.Ipv6Addresses = append(parent.Ipv6Addresses, data)
 			return true
 		})
 	}

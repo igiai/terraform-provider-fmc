@@ -535,314 +535,330 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 	}
 	if value := res.Get("dummy_categories"); value.Exists() {
 		data.Categories = make([]AccessControlPolicyCategories, 0)
-		value.ForEach(func(k, v gjson.Result) bool {
-			item := AccessControlPolicyCategories{}
-			if cValue := v.Get("id"); cValue.Exists() {
-				item.Id = types.StringValue(cValue.String())
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := data
+			data := AccessControlPolicyCategories{}
+			if value := res.Get("id"); value.Exists() {
+				data.Id = types.StringValue(value.String())
 			} else {
-				item.Id = types.StringNull()
+				data.Id = types.StringNull()
 			}
-			if cValue := v.Get("name"); cValue.Exists() {
-				item.Name = types.StringValue(cValue.String())
+			if value := res.Get("name"); value.Exists() {
+				data.Name = types.StringValue(value.String())
 			} else {
-				item.Name = types.StringNull()
+				data.Name = types.StringNull()
 			}
-			data.Categories = append(data.Categories, item)
+			parent.Categories = append(parent.Categories, data)
 			return true
 		})
 	}
 	if value := res.Get("dummy_rules"); value.Exists() {
 		data.Rules = make([]AccessControlPolicyRules, 0)
-		value.ForEach(func(k, v gjson.Result) bool {
-			item := AccessControlPolicyRules{}
-			if cValue := v.Get("id"); cValue.Exists() {
-				item.Id = types.StringValue(cValue.String())
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := data
+			data := AccessControlPolicyRules{}
+			if value := res.Get("id"); value.Exists() {
+				data.Id = types.StringValue(value.String())
 			} else {
-				item.Id = types.StringNull()
+				data.Id = types.StringNull()
 			}
-			if cValue := v.Get("action"); cValue.Exists() {
-				item.Action = types.StringValue(cValue.String())
+			if value := res.Get("action"); value.Exists() {
+				data.Action = types.StringValue(value.String())
 			} else {
-				item.Action = types.StringNull()
+				data.Action = types.StringNull()
 			}
-			if cValue := v.Get("name"); cValue.Exists() {
-				item.Name = types.StringValue(cValue.String())
+			if value := res.Get("name"); value.Exists() {
+				data.Name = types.StringValue(value.String())
 			} else {
-				item.Name = types.StringNull()
+				data.Name = types.StringNull()
 			}
-			if cValue := v.Get("metadata.category"); cValue.Exists() {
-				item.CategoryName = types.StringValue(cValue.String())
+			if value := res.Get("metadata.category"); value.Exists() {
+				data.CategoryName = types.StringValue(value.String())
 			} else {
-				item.CategoryName = types.StringNull()
+				data.CategoryName = types.StringNull()
 			}
-			if cValue := v.Get("metadata.section"); cValue.Exists() {
-				item.Section = types.StringValue(cValue.String())
+			if value := res.Get("metadata.section"); value.Exists() {
+				data.Section = types.StringValue(value.String())
 			} else {
-				item.Section = types.StringNull()
+				data.Section = types.StringNull()
 			}
-			if cValue := v.Get("enabled"); cValue.Exists() {
-				item.Enabled = types.BoolValue(cValue.Bool())
+			if value := res.Get("enabled"); value.Exists() {
+				data.Enabled = types.BoolValue(value.Bool())
 			} else {
-				item.Enabled = types.BoolValue(true)
+				data.Enabled = types.BoolValue(true)
 			}
-			if cValue := v.Get("sourceNetworks.literals"); cValue.Exists() {
-				item.SourceNetworkLiterals = make([]AccessControlPolicyRulesSourceNetworkLiterals, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := AccessControlPolicyRulesSourceNetworkLiterals{}
-					if ccValue := cv.Get("value"); ccValue.Exists() {
-						cItem.Value = types.StringValue(ccValue.String())
+			if value := res.Get("sourceNetworks.literals"); value.Exists() {
+				data.SourceNetworkLiterals = make([]AccessControlPolicyRulesSourceNetworkLiterals, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := AccessControlPolicyRulesSourceNetworkLiterals{}
+					if value := res.Get("value"); value.Exists() {
+						data.Value = types.StringValue(value.String())
 					} else {
-						cItem.Value = types.StringNull()
+						data.Value = types.StringNull()
 					}
-					item.SourceNetworkLiterals = append(item.SourceNetworkLiterals, cItem)
+					parent.SourceNetworkLiterals = append(parent.SourceNetworkLiterals, data)
 					return true
 				})
 			}
-			if cValue := v.Get("destinationNetworks.literals"); cValue.Exists() {
-				item.DestinationNetworkLiterals = make([]AccessControlPolicyRulesDestinationNetworkLiterals, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := AccessControlPolicyRulesDestinationNetworkLiterals{}
-					if ccValue := cv.Get("value"); ccValue.Exists() {
-						cItem.Value = types.StringValue(ccValue.String())
+			if value := res.Get("destinationNetworks.literals"); value.Exists() {
+				data.DestinationNetworkLiterals = make([]AccessControlPolicyRulesDestinationNetworkLiterals, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := AccessControlPolicyRulesDestinationNetworkLiterals{}
+					if value := res.Get("value"); value.Exists() {
+						data.Value = types.StringValue(value.String())
 					} else {
-						cItem.Value = types.StringNull()
+						data.Value = types.StringNull()
 					}
-					item.DestinationNetworkLiterals = append(item.DestinationNetworkLiterals, cItem)
+					parent.DestinationNetworkLiterals = append(parent.DestinationNetworkLiterals, data)
 					return true
 				})
 			}
-			if cValue := v.Get("sourceNetworks.objects"); cValue.Exists() {
-				item.SourceNetworkObjects = make([]AccessControlPolicyRulesSourceNetworkObjects, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := AccessControlPolicyRulesSourceNetworkObjects{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("sourceNetworks.objects"); value.Exists() {
+				data.SourceNetworkObjects = make([]AccessControlPolicyRulesSourceNetworkObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := AccessControlPolicyRulesSourceNetworkObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					if ccValue := cv.Get("type"); ccValue.Exists() {
-						cItem.Type = types.StringValue(ccValue.String())
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
 					} else {
-						cItem.Type = types.StringNull()
+						data.Type = types.StringNull()
 					}
-					item.SourceNetworkObjects = append(item.SourceNetworkObjects, cItem)
+					parent.SourceNetworkObjects = append(parent.SourceNetworkObjects, data)
 					return true
 				})
 			}
-			if cValue := v.Get("destinationNetworks.objects"); cValue.Exists() {
-				item.DestinationNetworkObjects = make([]AccessControlPolicyRulesDestinationNetworkObjects, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := AccessControlPolicyRulesDestinationNetworkObjects{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("destinationNetworks.objects"); value.Exists() {
+				data.DestinationNetworkObjects = make([]AccessControlPolicyRulesDestinationNetworkObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := AccessControlPolicyRulesDestinationNetworkObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					if ccValue := cv.Get("type"); ccValue.Exists() {
-						cItem.Type = types.StringValue(ccValue.String())
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
 					} else {
-						cItem.Type = types.StringNull()
+						data.Type = types.StringNull()
 					}
-					item.DestinationNetworkObjects = append(item.DestinationNetworkObjects, cItem)
+					parent.DestinationNetworkObjects = append(parent.DestinationNetworkObjects, data)
 					return true
 				})
 			}
-			if cValue := v.Get("sourceDynamicObjects.objects"); cValue.Exists() {
-				item.SourceDynamicObjects = make([]AccessControlPolicyRulesSourceDynamicObjects, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := AccessControlPolicyRulesSourceDynamicObjects{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("sourceDynamicObjects.objects"); value.Exists() {
+				data.SourceDynamicObjects = make([]AccessControlPolicyRulesSourceDynamicObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := AccessControlPolicyRulesSourceDynamicObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					item.SourceDynamicObjects = append(item.SourceDynamicObjects, cItem)
+					parent.SourceDynamicObjects = append(parent.SourceDynamicObjects, data)
 					return true
 				})
 			}
-			if cValue := v.Get("destinationDynamicObjects.objects"); cValue.Exists() {
-				item.DestinationDynamicObjects = make([]AccessControlPolicyRulesDestinationDynamicObjects, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := AccessControlPolicyRulesDestinationDynamicObjects{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("destinationDynamicObjects.objects"); value.Exists() {
+				data.DestinationDynamicObjects = make([]AccessControlPolicyRulesDestinationDynamicObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := AccessControlPolicyRulesDestinationDynamicObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					item.DestinationDynamicObjects = append(item.DestinationDynamicObjects, cItem)
+					parent.DestinationDynamicObjects = append(parent.DestinationDynamicObjects, data)
 					return true
 				})
 			}
-			if cValue := v.Get("sourcePorts.objects"); cValue.Exists() {
-				item.SourcePortObjects = make([]AccessControlPolicyRulesSourcePortObjects, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := AccessControlPolicyRulesSourcePortObjects{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("sourcePorts.objects"); value.Exists() {
+				data.SourcePortObjects = make([]AccessControlPolicyRulesSourcePortObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := AccessControlPolicyRulesSourcePortObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					item.SourcePortObjects = append(item.SourcePortObjects, cItem)
+					parent.SourcePortObjects = append(parent.SourcePortObjects, data)
 					return true
 				})
 			}
-			if cValue := v.Get("destinationPorts.objects"); cValue.Exists() {
-				item.DestinationPortObjects = make([]AccessControlPolicyRulesDestinationPortObjects, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := AccessControlPolicyRulesDestinationPortObjects{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("destinationPorts.objects"); value.Exists() {
+				data.DestinationPortObjects = make([]AccessControlPolicyRulesDestinationPortObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := AccessControlPolicyRulesDestinationPortObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					item.DestinationPortObjects = append(item.DestinationPortObjects, cItem)
+					parent.DestinationPortObjects = append(parent.DestinationPortObjects, data)
 					return true
 				})
 			}
-			if cValue := v.Get("sourceSecurityGroupTags.objects"); cValue.Exists() {
-				item.SourceSecurityGroupTagObjects = make([]AccessControlPolicyRulesSourceSecurityGroupTagObjects, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := AccessControlPolicyRulesSourceSecurityGroupTagObjects{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("sourceSecurityGroupTags.objects"); value.Exists() {
+				data.SourceSecurityGroupTagObjects = make([]AccessControlPolicyRulesSourceSecurityGroupTagObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := AccessControlPolicyRulesSourceSecurityGroupTagObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					if ccValue := cv.Get("type"); ccValue.Exists() {
-						cItem.Type = types.StringValue(ccValue.String())
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
 					} else {
-						cItem.Type = types.StringNull()
+						data.Type = types.StringNull()
 					}
-					item.SourceSecurityGroupTagObjects = append(item.SourceSecurityGroupTagObjects, cItem)
+					parent.SourceSecurityGroupTagObjects = append(parent.SourceSecurityGroupTagObjects, data)
 					return true
 				})
 			}
-			if cValue := v.Get("destinationSecurityGroupTags.objects"); cValue.Exists() {
-				item.DestinationSecurityGroupTagObjects = make([]AccessControlPolicyRulesDestinationSecurityGroupTagObjects, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := AccessControlPolicyRulesDestinationSecurityGroupTagObjects{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("destinationSecurityGroupTags.objects"); value.Exists() {
+				data.DestinationSecurityGroupTagObjects = make([]AccessControlPolicyRulesDestinationSecurityGroupTagObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := AccessControlPolicyRulesDestinationSecurityGroupTagObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					if ccValue := cv.Get("type"); ccValue.Exists() {
-						cItem.Type = types.StringValue(ccValue.String())
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
 					} else {
-						cItem.Type = types.StringNull()
+						data.Type = types.StringNull()
 					}
-					item.DestinationSecurityGroupTagObjects = append(item.DestinationSecurityGroupTagObjects, cItem)
+					parent.DestinationSecurityGroupTagObjects = append(parent.DestinationSecurityGroupTagObjects, data)
 					return true
 				})
 			}
-			if cValue := v.Get("sourceZones.objects"); cValue.Exists() {
-				item.SourceZones = make([]AccessControlPolicyRulesSourceZones, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := AccessControlPolicyRulesSourceZones{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("sourceZones.objects"); value.Exists() {
+				data.SourceZones = make([]AccessControlPolicyRulesSourceZones, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := AccessControlPolicyRulesSourceZones{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					item.SourceZones = append(item.SourceZones, cItem)
+					parent.SourceZones = append(parent.SourceZones, data)
 					return true
 				})
 			}
-			if cValue := v.Get("destinationZones.objects"); cValue.Exists() {
-				item.DestinationZones = make([]AccessControlPolicyRulesDestinationZones, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := AccessControlPolicyRulesDestinationZones{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("destinationZones.objects"); value.Exists() {
+				data.DestinationZones = make([]AccessControlPolicyRulesDestinationZones, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := AccessControlPolicyRulesDestinationZones{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					item.DestinationZones = append(item.DestinationZones, cItem)
+					parent.DestinationZones = append(parent.DestinationZones, data)
 					return true
 				})
 			}
-			if cValue := v.Get("urls.objects"); cValue.Exists() {
-				item.UrlObjects = make([]AccessControlPolicyRulesUrlObjects, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := AccessControlPolicyRulesUrlObjects{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("urls.objects"); value.Exists() {
+				data.UrlObjects = make([]AccessControlPolicyRulesUrlObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := AccessControlPolicyRulesUrlObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					item.UrlObjects = append(item.UrlObjects, cItem)
+					parent.UrlObjects = append(parent.UrlObjects, data)
 					return true
 				})
 			}
-			if cValue := v.Get("urls.urlCategoriesWithReputation"); cValue.Exists() {
-				item.UrlCategories = make([]AccessControlPolicyRulesUrlCategories, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := AccessControlPolicyRulesUrlCategories{}
-					if ccValue := cv.Get("category.id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("urls.urlCategoriesWithReputation"); value.Exists() {
+				data.UrlCategories = make([]AccessControlPolicyRulesUrlCategories, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := data
+					data := AccessControlPolicyRulesUrlCategories{}
+					if value := res.Get("category.id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					if ccValue := cv.Get("reputation"); ccValue.Exists() {
-						cItem.Reputation = types.StringValue(ccValue.String())
+					if value := res.Get("reputation"); value.Exists() {
+						data.Reputation = types.StringValue(value.String())
 					} else {
-						cItem.Reputation = types.StringNull()
+						data.Reputation = types.StringNull()
 					}
-					item.UrlCategories = append(item.UrlCategories, cItem)
+					parent.UrlCategories = append(parent.UrlCategories, data)
 					return true
 				})
 			}
-			if cValue := v.Get("logBegin"); cValue.Exists() {
-				item.LogBegin = types.BoolValue(cValue.Bool())
+			if value := res.Get("logBegin"); value.Exists() {
+				data.LogBegin = types.BoolValue(value.Bool())
 			} else {
-				item.LogBegin = types.BoolValue(false)
+				data.LogBegin = types.BoolValue(false)
 			}
-			if cValue := v.Get("logEnd"); cValue.Exists() {
-				item.LogEnd = types.BoolValue(cValue.Bool())
+			if value := res.Get("logEnd"); value.Exists() {
+				data.LogEnd = types.BoolValue(value.Bool())
 			} else {
-				item.LogEnd = types.BoolValue(false)
+				data.LogEnd = types.BoolValue(false)
 			}
-			if cValue := v.Get("logFiles"); cValue.Exists() {
-				item.LogFiles = types.BoolValue(cValue.Bool())
+			if value := res.Get("logFiles"); value.Exists() {
+				data.LogFiles = types.BoolValue(value.Bool())
 			} else {
-				item.LogFiles = types.BoolValue(false)
+				data.LogFiles = types.BoolValue(false)
 			}
-			if cValue := v.Get("sendEventsToFMC"); cValue.Exists() {
-				item.SendEventsToFmc = types.BoolValue(cValue.Bool())
+			if value := res.Get("sendEventsToFMC"); value.Exists() {
+				data.SendEventsToFmc = types.BoolValue(value.Bool())
 			} else {
-				item.SendEventsToFmc = types.BoolValue(false)
+				data.SendEventsToFmc = types.BoolValue(false)
 			}
-			if cValue := v.Get("enableSyslog"); cValue.Exists() {
-				item.SendSyslog = types.BoolValue(cValue.Bool())
+			if value := res.Get("enableSyslog"); value.Exists() {
+				data.SendSyslog = types.BoolValue(value.Bool())
 			} else {
-				item.SendSyslog = types.BoolValue(false)
+				data.SendSyslog = types.BoolValue(false)
 			}
-			if cValue := v.Get("syslogConfig.id"); cValue.Exists() {
-				item.SyslogConfigId = types.StringValue(cValue.String())
+			if value := res.Get("syslogConfig.id"); value.Exists() {
+				data.SyslogConfigId = types.StringValue(value.String())
 			} else {
-				item.SyslogConfigId = types.StringNull()
+				data.SyslogConfigId = types.StringNull()
 			}
-			if cValue := v.Get("syslogSeverity"); cValue.Exists() {
-				item.SyslogSeverity = types.StringValue(cValue.String())
+			if value := res.Get("syslogSeverity"); value.Exists() {
+				data.SyslogSeverity = types.StringValue(value.String())
 			} else {
-				item.SyslogSeverity = types.StringNull()
+				data.SyslogSeverity = types.StringNull()
 			}
-			if cValue := v.Get("snmpConfig.id"); cValue.Exists() {
-				item.SnmpConfigId = types.StringValue(cValue.String())
+			if value := res.Get("snmpConfig.id"); value.Exists() {
+				data.SnmpConfigId = types.StringValue(value.String())
 			} else {
-				item.SnmpConfigId = types.StringNull()
+				data.SnmpConfigId = types.StringNull()
 			}
-			if cValue := v.Get("filePolicy.id"); cValue.Exists() {
-				item.FilePolicyId = types.StringValue(cValue.String())
+			if value := res.Get("filePolicy.id"); value.Exists() {
+				data.FilePolicyId = types.StringValue(value.String())
 			} else {
-				item.FilePolicyId = types.StringNull()
+				data.FilePolicyId = types.StringNull()
 			}
-			if cValue := v.Get("ipsPolicy.id"); cValue.Exists() {
-				item.IntrusionPolicyId = types.StringValue(cValue.String())
+			if value := res.Get("ipsPolicy.id"); value.Exists() {
+				data.IntrusionPolicyId = types.StringValue(value.String())
 			} else {
-				item.IntrusionPolicyId = types.StringNull()
+				data.IntrusionPolicyId = types.StringNull()
 			}
-			data.Rules = append(data.Rules, item)
+			parent.Rules = append(parent.Rules, data)
 			return true
 		})
 	}
