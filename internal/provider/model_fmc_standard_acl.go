@@ -206,9 +206,9 @@ func (data *StandardACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 		}
 	}
 	for i := range data.Entries {
-		parent := data
-		data := parent.Entries[i]
-		parentRes := res
+		parent := &data
+		data := (*parent).Entries[i]
+		parentRes := &res
 		res := parentRes.Get(fmt.Sprintf("entries.%d", i))
 		if value := res.Get("action"); value.Exists() && !data.Action.IsNull() {
 			data.Action = types.StringValue(value.String())
@@ -219,9 +219,9 @@ func (data *StandardACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Objects[i].Id.ValueString()}
 
-			parent := data
-			data := parent.Objects[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).Objects[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("networks.objects").ForEach(
@@ -244,9 +244,9 @@ func (data *StandardACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing Objects[%d] = %+v",
 					i,
-					parent.Objects[i],
+					(*parent).Objects[i],
 				))
-				parent.Objects = slices.Delete(parent.Objects, i, i+1)
+				(*parent).Objects = slices.Delete((*parent).Objects, i, i+1)
 				i--
 
 				continue
@@ -261,15 +261,15 @@ func (data *StandardACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 			} else {
 				data.Type = types.StringNull()
 			}
-			parent.Objects[i] = data
+			(*parent).Objects[i] = data
 		}
 		for i := 0; i < len(data.Literals); i++ {
 			keys := [...]string{"value"}
 			keyValues := [...]string{data.Literals[i].Value.ValueString()}
 
-			parent := data
-			data := parent.Literals[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).Literals[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("networks.literals").ForEach(
@@ -292,9 +292,9 @@ func (data *StandardACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing Literals[%d] = %+v",
 					i,
-					parent.Literals[i],
+					(*parent).Literals[i],
 				))
-				parent.Literals = slices.Delete(parent.Literals, i, i+1)
+				(*parent).Literals = slices.Delete((*parent).Literals, i, i+1)
 				i--
 
 				continue
@@ -304,9 +304,9 @@ func (data *StandardACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 			} else {
 				data.Value = types.StringNull()
 			}
-			parent.Literals[i] = data
+			(*parent).Literals[i] = data
 		}
-		parent.Entries[i] = data
+		(*parent).Entries[i] = data
 	}
 }
 

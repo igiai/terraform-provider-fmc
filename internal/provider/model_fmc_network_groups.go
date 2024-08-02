@@ -20,8 +20,12 @@ package provider
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
 	"context"
+	"fmt"
+	"slices"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"github.com/netascode/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 )
@@ -131,6 +135,137 @@ func (data *NetworkGroups) fromBody(ctx context.Context, res gjson.Result) {
 // easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
 // "managed" elements, instead of all elements.
 func (data *NetworkGroups) fromBodyPartial(ctx context.Context, res gjson.Result) {
+	for i := range data.Items {
+		parent := &data
+		data := (*parent).Items[i]
+		parentRes := &res
+		var res gjson.Result
+
+		parentRes.Get("items").ForEach(
+			func(_, v gjson.Result) bool {
+				if data.Id.IsUnknown() {
+					if v.Get("name").String() == i {
+						res = v
+						return false // break ForEach
+					}
+				} else {
+					if data.Id.ValueString() == v.Get("id").String() {
+						res = v
+						return false // break ForEach
+					}
+				}
+
+				return true
+			},
+		)
+		if value := res.Get("id"); value.Exists() {
+			data.Id = types.StringValue(value.String())
+		} else {
+			data.Id = types.StringNull()
+		}
+		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
+			data.Description = types.StringValue(value.String())
+		} else {
+			data.Description = types.StringNull()
+		}
+		if value := res.Get("overridable"); value.Exists() && !data.Overridable.IsNull() {
+			data.Overridable = types.BoolValue(value.Bool())
+		} else {
+			data.Overridable = types.BoolNull()
+		}
+		if value := res.Get("group_names"); value.Exists() && !data.GroupNames.IsNull() {
+			data.GroupNames = helpers.GetStringSet(value.Array())
+		} else {
+			data.GroupNames = types.SetNull(types.StringType)
+		}
+		for i := 0; i < len(data.Objects); i++ {
+			keys := [...]string{"id"}
+			keyValues := [...]string{data.Objects[i].Id.ValueString()}
+
+			parent := &data
+			data := (*parent).Objects[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("objects").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing Objects[%d] = %+v",
+					i,
+					(*parent).Objects[i],
+				))
+				(*parent).Objects = slices.Delete((*parent).Objects, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			(*parent).Objects[i] = data
+		}
+		for i := 0; i < len(data.Literals); i++ {
+			keys := [...]string{"value"}
+			keyValues := [...]string{data.Literals[i].Value.ValueString()}
+
+			parent := &data
+			data := (*parent).Literals[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("literals").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing Literals[%d] = %+v",
+					i,
+					(*parent).Literals[i],
+				))
+				(*parent).Literals = slices.Delete((*parent).Literals, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("value"); value.Exists() && !data.Value.IsNull() {
+				data.Value = types.StringValue(value.String())
+			} else {
+				data.Value = types.StringNull()
+			}
+			(*parent).Literals[i] = data
+		}
+		(*parent).Items[i] = data
+	}
 }
 
 // End of section. //template:end fromBodyPartial
@@ -159,8 +294,7 @@ func (data *NetworkGroups) fromBodyUnknowns(ctx context.Context, res gjson.Resul
 				return true
 			},
 		)
-		if data.Items[i].Id.IsUnknown() {
-			v := data.Items[i]
+		if v := data.Items[i]; v.Id.IsUnknown() {
 			if value := r.Get("id"); value.Exists() {
 				v.Id = types.StringValue(value.String())
 			} else {

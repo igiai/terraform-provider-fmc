@@ -90,6 +90,9 @@ func (r *NetworkGroupsResource) Schema(ctx context.Context, req resource.SchemaR
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("UUID of the managed Network Group.").String,
 							Computed:            true,
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.UseStateForUnknown(),
+							},
 						},
 						"description": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,

@@ -31,16 +31,15 @@ import (
 
 func TestAccFmcNetworkGroups(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_network_groups.test", "items", ""))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcNetworkGroupsConfig_minimum(),
+			Config: testAccFmcNetworkGroupsPrerequisitesConfig + testAccFmcNetworkGroupsConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcNetworkGroupsConfig_all(),
+		Config: testAccFmcNetworkGroupsPrerequisitesConfig + testAccFmcNetworkGroupsConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 	steps = append(steps, resource.TestStep{
@@ -58,12 +57,21 @@ func TestAccFmcNetworkGroups(t *testing.T) {
 // End of section. //template:end testAcc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
+const testAccFmcNetworkGroupsPrerequisitesConfig = `
+resource "fmc_range" "test" {
+  name   = "test_fmc_network_groups"
+  value  = "2005::10-2005::12"
+}
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
 
 func testAccFmcNetworkGroupsConfig_minimum() string {
 	config := `resource "fmc_network_groups" "test" {` + "\n"
+	config += `	items = {net_group_1={literals=[{value="2005::/56"}]}}` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -74,7 +82,16 @@ func testAccFmcNetworkGroupsConfig_minimum() string {
 
 func testAccFmcNetworkGroupsConfig_all() string {
 	config := `resource "fmc_network_groups" "test" {` + "\n"
-	config += `	items = ` + "\n"
+	config += `	items = { "net_group_1" = {` + "\n"
+	config += `		description = "My Network Group 1"` + "\n"
+	config += `		overridable = true` + "\n"
+	config += `		objects = [{` + "\n"
+	config += `			id = fmc_range.test.id` + "\n"
+	config += `		}]` + "\n"
+	config += `		literals = [{` + "\n"
+	config += `			value = "10.1.1.0/24"` + "\n"
+	config += `		}]` + "\n"
+	config += `	}}` + "\n"
 	config += `}` + "\n"
 	return config
 }

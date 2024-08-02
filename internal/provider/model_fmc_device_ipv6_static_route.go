@@ -162,9 +162,9 @@ func (data *DeviceIPv6StaticRoute) fromBodyPartial(ctx context.Context, res gjso
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.DestinationNetworks[i].Id.ValueString()}
 
-		parent := data
-		data := parent.DestinationNetworks[i]
-		parentRes := res
+		parent := &data
+		data := (*parent).DestinationNetworks[i]
+		parentRes := &res
 		var res gjson.Result
 
 		parentRes.Get("selectedNetworks").ForEach(
@@ -187,9 +187,9 @@ func (data *DeviceIPv6StaticRoute) fromBodyPartial(ctx context.Context, res gjso
 		if !res.Exists() {
 			tflog.Debug(ctx, fmt.Sprintf("removing DestinationNetworks[%d] = %+v",
 				i,
-				parent.DestinationNetworks[i],
+				(*parent).DestinationNetworks[i],
 			))
-			parent.DestinationNetworks = slices.Delete(parent.DestinationNetworks, i, i+1)
+			(*parent).DestinationNetworks = slices.Delete((*parent).DestinationNetworks, i, i+1)
 			i--
 
 			continue
@@ -199,7 +199,7 @@ func (data *DeviceIPv6StaticRoute) fromBodyPartial(ctx context.Context, res gjso
 		} else {
 			data.Id = types.StringNull()
 		}
-		parent.DestinationNetworks[i] = data
+		(*parent).DestinationNetworks[i] = data
 	}
 	if value := res.Get("metricValue"); value.Exists() && !data.MetricValue.IsNull() {
 		data.MetricValue = types.Int64Value(value.Int())

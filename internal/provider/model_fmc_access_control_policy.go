@@ -928,9 +928,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 		}
 	}
 	for i := range data.Categories {
-		parent := data
-		data := parent.Categories[i]
-		parentRes := res
+		parent := &data
+		data := (*parent).Categories[i]
+		parentRes := &res
 		res := parentRes.Get(fmt.Sprintf("dummy_categories.%d", i))
 		if value := res.Get("id"); value.Exists() {
 			data.Id = types.StringValue(value.String())
@@ -942,7 +942,7 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 		} else {
 			data.Name = types.StringNull()
 		}
-		parent.Categories[i] = data
+		(*parent).Categories[i] = data
 	}
 	{
 		l := len(res.Get("dummy_rules").Array())
@@ -955,9 +955,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 		}
 	}
 	for i := range data.Rules {
-		parent := data
-		data := parent.Rules[i]
-		parentRes := res
+		parent := &data
+		data := (*parent).Rules[i]
+		parentRes := &res
 		res := parentRes.Get(fmt.Sprintf("dummy_rules.%d", i))
 		if value := res.Get("id"); value.Exists() {
 			data.Id = types.StringValue(value.String())
@@ -993,9 +993,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			keys := [...]string{"value"}
 			keyValues := [...]string{data.SourceNetworkLiterals[i].Value.ValueString()}
 
-			parent := data
-			data := parent.SourceNetworkLiterals[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).SourceNetworkLiterals[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("sourceNetworks.literals").ForEach(
@@ -1018,9 +1018,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing SourceNetworkLiterals[%d] = %+v",
 					i,
-					parent.SourceNetworkLiterals[i],
+					(*parent).SourceNetworkLiterals[i],
 				))
-				parent.SourceNetworkLiterals = slices.Delete(parent.SourceNetworkLiterals, i, i+1)
+				(*parent).SourceNetworkLiterals = slices.Delete((*parent).SourceNetworkLiterals, i, i+1)
 				i--
 
 				continue
@@ -1030,15 +1030,15 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Value = types.StringNull()
 			}
-			parent.SourceNetworkLiterals[i] = data
+			(*parent).SourceNetworkLiterals[i] = data
 		}
 		for i := 0; i < len(data.DestinationNetworkLiterals); i++ {
 			keys := [...]string{"value"}
 			keyValues := [...]string{data.DestinationNetworkLiterals[i].Value.ValueString()}
 
-			parent := data
-			data := parent.DestinationNetworkLiterals[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).DestinationNetworkLiterals[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("destinationNetworks.literals").ForEach(
@@ -1061,9 +1061,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing DestinationNetworkLiterals[%d] = %+v",
 					i,
-					parent.DestinationNetworkLiterals[i],
+					(*parent).DestinationNetworkLiterals[i],
 				))
-				parent.DestinationNetworkLiterals = slices.Delete(parent.DestinationNetworkLiterals, i, i+1)
+				(*parent).DestinationNetworkLiterals = slices.Delete((*parent).DestinationNetworkLiterals, i, i+1)
 				i--
 
 				continue
@@ -1073,15 +1073,15 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Value = types.StringNull()
 			}
-			parent.DestinationNetworkLiterals[i] = data
+			(*parent).DestinationNetworkLiterals[i] = data
 		}
 		for i := 0; i < len(data.SourceNetworkObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourceNetworkObjects[i].Id.ValueString()}
 
-			parent := data
-			data := parent.SourceNetworkObjects[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).SourceNetworkObjects[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("sourceNetworks.objects").ForEach(
@@ -1104,9 +1104,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing SourceNetworkObjects[%d] = %+v",
 					i,
-					parent.SourceNetworkObjects[i],
+					(*parent).SourceNetworkObjects[i],
 				))
-				parent.SourceNetworkObjects = slices.Delete(parent.SourceNetworkObjects, i, i+1)
+				(*parent).SourceNetworkObjects = slices.Delete((*parent).SourceNetworkObjects, i, i+1)
 				i--
 
 				continue
@@ -1121,15 +1121,15 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Type = types.StringNull()
 			}
-			parent.SourceNetworkObjects[i] = data
+			(*parent).SourceNetworkObjects[i] = data
 		}
 		for i := 0; i < len(data.DestinationNetworkObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationNetworkObjects[i].Id.ValueString()}
 
-			parent := data
-			data := parent.DestinationNetworkObjects[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).DestinationNetworkObjects[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("destinationNetworks.objects").ForEach(
@@ -1152,9 +1152,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing DestinationNetworkObjects[%d] = %+v",
 					i,
-					parent.DestinationNetworkObjects[i],
+					(*parent).DestinationNetworkObjects[i],
 				))
-				parent.DestinationNetworkObjects = slices.Delete(parent.DestinationNetworkObjects, i, i+1)
+				(*parent).DestinationNetworkObjects = slices.Delete((*parent).DestinationNetworkObjects, i, i+1)
 				i--
 
 				continue
@@ -1169,15 +1169,15 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Type = types.StringNull()
 			}
-			parent.DestinationNetworkObjects[i] = data
+			(*parent).DestinationNetworkObjects[i] = data
 		}
 		for i := 0; i < len(data.SourceDynamicObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourceDynamicObjects[i].Id.ValueString()}
 
-			parent := data
-			data := parent.SourceDynamicObjects[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).SourceDynamicObjects[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("sourceDynamicObjects.objects").ForEach(
@@ -1200,9 +1200,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing SourceDynamicObjects[%d] = %+v",
 					i,
-					parent.SourceDynamicObjects[i],
+					(*parent).SourceDynamicObjects[i],
 				))
-				parent.SourceDynamicObjects = slices.Delete(parent.SourceDynamicObjects, i, i+1)
+				(*parent).SourceDynamicObjects = slices.Delete((*parent).SourceDynamicObjects, i, i+1)
 				i--
 
 				continue
@@ -1212,15 +1212,15 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Id = types.StringNull()
 			}
-			parent.SourceDynamicObjects[i] = data
+			(*parent).SourceDynamicObjects[i] = data
 		}
 		for i := 0; i < len(data.DestinationDynamicObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationDynamicObjects[i].Id.ValueString()}
 
-			parent := data
-			data := parent.DestinationDynamicObjects[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).DestinationDynamicObjects[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("destinationDynamicObjects.objects").ForEach(
@@ -1243,9 +1243,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing DestinationDynamicObjects[%d] = %+v",
 					i,
-					parent.DestinationDynamicObjects[i],
+					(*parent).DestinationDynamicObjects[i],
 				))
-				parent.DestinationDynamicObjects = slices.Delete(parent.DestinationDynamicObjects, i, i+1)
+				(*parent).DestinationDynamicObjects = slices.Delete((*parent).DestinationDynamicObjects, i, i+1)
 				i--
 
 				continue
@@ -1255,15 +1255,15 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Id = types.StringNull()
 			}
-			parent.DestinationDynamicObjects[i] = data
+			(*parent).DestinationDynamicObjects[i] = data
 		}
 		for i := 0; i < len(data.SourcePortObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourcePortObjects[i].Id.ValueString()}
 
-			parent := data
-			data := parent.SourcePortObjects[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).SourcePortObjects[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("sourcePorts.objects").ForEach(
@@ -1286,9 +1286,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing SourcePortObjects[%d] = %+v",
 					i,
-					parent.SourcePortObjects[i],
+					(*parent).SourcePortObjects[i],
 				))
-				parent.SourcePortObjects = slices.Delete(parent.SourcePortObjects, i, i+1)
+				(*parent).SourcePortObjects = slices.Delete((*parent).SourcePortObjects, i, i+1)
 				i--
 
 				continue
@@ -1298,15 +1298,15 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Id = types.StringNull()
 			}
-			parent.SourcePortObjects[i] = data
+			(*parent).SourcePortObjects[i] = data
 		}
 		for i := 0; i < len(data.DestinationPortObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationPortObjects[i].Id.ValueString()}
 
-			parent := data
-			data := parent.DestinationPortObjects[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).DestinationPortObjects[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("destinationPorts.objects").ForEach(
@@ -1329,9 +1329,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing DestinationPortObjects[%d] = %+v",
 					i,
-					parent.DestinationPortObjects[i],
+					(*parent).DestinationPortObjects[i],
 				))
-				parent.DestinationPortObjects = slices.Delete(parent.DestinationPortObjects, i, i+1)
+				(*parent).DestinationPortObjects = slices.Delete((*parent).DestinationPortObjects, i, i+1)
 				i--
 
 				continue
@@ -1341,15 +1341,15 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Id = types.StringNull()
 			}
-			parent.DestinationPortObjects[i] = data
+			(*parent).DestinationPortObjects[i] = data
 		}
 		for i := 0; i < len(data.SourceSecurityGroupTagObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourceSecurityGroupTagObjects[i].Id.ValueString()}
 
-			parent := data
-			data := parent.SourceSecurityGroupTagObjects[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).SourceSecurityGroupTagObjects[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("sourceSecurityGroupTags.objects").ForEach(
@@ -1372,9 +1372,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing SourceSecurityGroupTagObjects[%d] = %+v",
 					i,
-					parent.SourceSecurityGroupTagObjects[i],
+					(*parent).SourceSecurityGroupTagObjects[i],
 				))
-				parent.SourceSecurityGroupTagObjects = slices.Delete(parent.SourceSecurityGroupTagObjects, i, i+1)
+				(*parent).SourceSecurityGroupTagObjects = slices.Delete((*parent).SourceSecurityGroupTagObjects, i, i+1)
 				i--
 
 				continue
@@ -1389,15 +1389,15 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Type = types.StringNull()
 			}
-			parent.SourceSecurityGroupTagObjects[i] = data
+			(*parent).SourceSecurityGroupTagObjects[i] = data
 		}
 		for i := 0; i < len(data.DestinationSecurityGroupTagObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationSecurityGroupTagObjects[i].Id.ValueString()}
 
-			parent := data
-			data := parent.DestinationSecurityGroupTagObjects[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).DestinationSecurityGroupTagObjects[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("destinationSecurityGroupTags.objects").ForEach(
@@ -1420,9 +1420,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing DestinationSecurityGroupTagObjects[%d] = %+v",
 					i,
-					parent.DestinationSecurityGroupTagObjects[i],
+					(*parent).DestinationSecurityGroupTagObjects[i],
 				))
-				parent.DestinationSecurityGroupTagObjects = slices.Delete(parent.DestinationSecurityGroupTagObjects, i, i+1)
+				(*parent).DestinationSecurityGroupTagObjects = slices.Delete((*parent).DestinationSecurityGroupTagObjects, i, i+1)
 				i--
 
 				continue
@@ -1437,15 +1437,15 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Type = types.StringNull()
 			}
-			parent.DestinationSecurityGroupTagObjects[i] = data
+			(*parent).DestinationSecurityGroupTagObjects[i] = data
 		}
 		for i := 0; i < len(data.SourceZones); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourceZones[i].Id.ValueString()}
 
-			parent := data
-			data := parent.SourceZones[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).SourceZones[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("sourceZones.objects").ForEach(
@@ -1468,9 +1468,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing SourceZones[%d] = %+v",
 					i,
-					parent.SourceZones[i],
+					(*parent).SourceZones[i],
 				))
-				parent.SourceZones = slices.Delete(parent.SourceZones, i, i+1)
+				(*parent).SourceZones = slices.Delete((*parent).SourceZones, i, i+1)
 				i--
 
 				continue
@@ -1480,15 +1480,15 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Id = types.StringNull()
 			}
-			parent.SourceZones[i] = data
+			(*parent).SourceZones[i] = data
 		}
 		for i := 0; i < len(data.DestinationZones); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationZones[i].Id.ValueString()}
 
-			parent := data
-			data := parent.DestinationZones[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).DestinationZones[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("destinationZones.objects").ForEach(
@@ -1511,9 +1511,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing DestinationZones[%d] = %+v",
 					i,
-					parent.DestinationZones[i],
+					(*parent).DestinationZones[i],
 				))
-				parent.DestinationZones = slices.Delete(parent.DestinationZones, i, i+1)
+				(*parent).DestinationZones = slices.Delete((*parent).DestinationZones, i, i+1)
 				i--
 
 				continue
@@ -1523,15 +1523,15 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Id = types.StringNull()
 			}
-			parent.DestinationZones[i] = data
+			(*parent).DestinationZones[i] = data
 		}
 		for i := 0; i < len(data.UrlObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.UrlObjects[i].Id.ValueString()}
 
-			parent := data
-			data := parent.UrlObjects[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).UrlObjects[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("urls.objects").ForEach(
@@ -1554,9 +1554,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing UrlObjects[%d] = %+v",
 					i,
-					parent.UrlObjects[i],
+					(*parent).UrlObjects[i],
 				))
-				parent.UrlObjects = slices.Delete(parent.UrlObjects, i, i+1)
+				(*parent).UrlObjects = slices.Delete((*parent).UrlObjects, i, i+1)
 				i--
 
 				continue
@@ -1566,15 +1566,15 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Id = types.StringNull()
 			}
-			parent.UrlObjects[i] = data
+			(*parent).UrlObjects[i] = data
 		}
 		for i := 0; i < len(data.UrlCategories); i++ {
 			keys := [...]string{"category.id"}
 			keyValues := [...]string{data.UrlCategories[i].Id.ValueString()}
 
-			parent := data
-			data := parent.UrlCategories[i]
-			parentRes := res
+			parent := &data
+			data := (*parent).UrlCategories[i]
+			parentRes := &res
 			var res gjson.Result
 
 			parentRes.Get("urls.urlCategoriesWithReputation").ForEach(
@@ -1597,9 +1597,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			if !res.Exists() {
 				tflog.Debug(ctx, fmt.Sprintf("removing UrlCategories[%d] = %+v",
 					i,
-					parent.UrlCategories[i],
+					(*parent).UrlCategories[i],
 				))
-				parent.UrlCategories = slices.Delete(parent.UrlCategories, i, i+1)
+				(*parent).UrlCategories = slices.Delete((*parent).UrlCategories, i, i+1)
 				i--
 
 				continue
@@ -1614,7 +1614,7 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Reputation = types.StringNull()
 			}
-			parent.UrlCategories[i] = data
+			(*parent).UrlCategories[i] = data
 		}
 		if value := res.Get("logBegin"); value.Exists() && !data.LogBegin.IsNull() {
 			data.LogBegin = types.BoolValue(value.Bool())
@@ -1666,7 +1666,7 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 		} else {
 			data.IntrusionPolicyId = types.StringNull()
 		}
-		parent.Rules[i] = data
+		(*parent).Rules[i] = data
 	}
 }
 
@@ -1710,8 +1710,7 @@ func (data *AccessControlPolicy) fromBodyUnknowns(ctx context.Context, res gjson
 	}
 	for i := range data.Categories {
 		r := res.Get(fmt.Sprintf("dummy_categories.%d", i))
-		if data.Categories[i].Id.IsUnknown() {
-			v := data.Categories[i]
+		if v := data.Categories[i]; v.Id.IsUnknown() {
 			if value := r.Get("id"); value.Exists() {
 				v.Id = types.StringValue(value.String())
 			} else {
@@ -1722,8 +1721,7 @@ func (data *AccessControlPolicy) fromBodyUnknowns(ctx context.Context, res gjson
 	}
 	for i := range data.Rules {
 		r := res.Get(fmt.Sprintf("dummy_rules.%d", i))
-		if data.Rules[i].Id.IsUnknown() {
-			v := data.Rules[i]
+		if v := data.Rules[i]; v.Id.IsUnknown() {
 			if value := r.Get("id"); value.Exists() {
 				v.Id = types.StringValue(value.String())
 			} else {

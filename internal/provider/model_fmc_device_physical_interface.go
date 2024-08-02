@@ -394,9 +394,9 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 		keys := [...]string{"address", "prefix"}
 		keyValues := [...]string{data.Ipv6Addresses[i].Address.ValueString(), data.Ipv6Addresses[i].Prefix.ValueString()}
 
-		parent := data
-		data := parent.Ipv6Addresses[i]
-		parentRes := res
+		parent := &data
+		data := (*parent).Ipv6Addresses[i]
+		parentRes := &res
 		var res gjson.Result
 
 		parentRes.Get("ipv6.addresses").ForEach(
@@ -419,9 +419,9 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 		if !res.Exists() {
 			tflog.Debug(ctx, fmt.Sprintf("removing Ipv6Addresses[%d] = %+v",
 				i,
-				parent.Ipv6Addresses[i],
+				(*parent).Ipv6Addresses[i],
 			))
-			parent.Ipv6Addresses = slices.Delete(parent.Ipv6Addresses, i, i+1)
+			(*parent).Ipv6Addresses = slices.Delete((*parent).Ipv6Addresses, i, i+1)
 			i--
 
 			continue
@@ -441,7 +441,7 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 		} else {
 			data.EnforceEui = types.BoolNull()
 		}
-		parent.Ipv6Addresses[i] = data
+		(*parent).Ipv6Addresses[i] = data
 	}
 }
 
