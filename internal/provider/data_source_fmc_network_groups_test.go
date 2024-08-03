@@ -59,7 +59,7 @@ resource "fmc_range" "test" {
 
 func testAccDataSourceFmcNetworkGroupsConfig() string {
 	config := `resource "fmc_network_groups" "test" {` + "\n"
-	config += `	items = { "myname" = {` + "\n"
+	config += `	items = { "net_group_1" = {` + "\n"
 	config += `		description = "My Network Group 1"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		objects = [{` + "\n"
@@ -74,6 +74,13 @@ func testAccDataSourceFmcNetworkGroupsConfig() string {
 	config += `
 		data "fmc_network_groups" "test" {
 			id = fmc_network_groups.test.id
+			
+			
+			items = {
+				"net_group_1" = {
+					id = fmc_network_groups.test.items["net_group_1"].id
+				}
+			}
 		}
 	`
 	return config

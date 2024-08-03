@@ -235,7 +235,7 @@ func (r *NetworkGroupsResource) Read(ctx context.Context, req resource.ReadReque
 
 	// Read subobjects from "items"
 
-	// TODO: >1000
+	// TODO: >1000 and other improvements from data-source
 	params := "?expanded=true&limit=1000"
 	res, err := r.client.Get(state.getPath()+params, reqMods...)
 	if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
@@ -247,8 +247,8 @@ func (r *NetworkGroupsResource) Read(ctx context.Context, req resource.ReadReque
 		return
 	}
 
-	// Distill group_names
-	res = r.withAllGroupNames(ctx, res, &state)
+	// Synthesise group_names
+	res = withAllGroupNames(ctx, res, &state)
 
 	imp, diags := helpers.IsFlagImporting(ctx, req)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
@@ -270,20 +270,20 @@ func (r *NetworkGroupsResource) Read(ctx context.Context, req resource.ReadReque
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
-func (r *NetworkGroupsResource) withAllGroupNames(ctx context.Context, res gjson.Result, state *NetworkGroups) gjson.Result {
+func withAllGroupNames(ctx context.Context, res gjson.Result, state *NetworkGroups) gjson.Result {
 	items := `[]`
 	if !res.Get("items").IsArray() {
 		return res
 	}
 	for _, item := range res.Get("items").Array() {
-		item := r.withItemGroupNames(ctx, item, state)
+		item := withItemGroupNames(ctx, item, state)
 		items, _ = sjson.SetRaw(items, "-1", item)
 	}
 
 	return set(res, "items", gjson.Parse(items))
 }
 
-func (r *NetworkGroupsResource) withItemGroupNames(ctx context.Context, item gjson.Result, state *NetworkGroups) string {
+func withItemGroupNames(ctx context.Context, item gjson.Result, state *NetworkGroups) string {
 	ret := item.String()
 	name := item.Get("name").String()
 	if _, found := state.Items[name]; !found {
